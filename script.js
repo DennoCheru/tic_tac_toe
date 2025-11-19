@@ -1,12 +1,14 @@
 const Gameboard = (function() {
     board = Array(9).fill("");
 
-    const getBoard = () => [...board];
+    const getCell = (index) => board[index];
 
     const setMove = (mark, index) => {
-        if (board[index] != "") {
-            board[index] = mark;
-            return true;
+        if (index >=0 && index < board.length && ["x", "o"].includes(mark) {
+            if (board[index] === "") {
+                board[index] = mark;
+                return true;
+            }
         }
         return false;
     }
@@ -14,6 +16,9 @@ const Gameboard = (function() {
         for (let i = 0; i < board.length; i++) {
             board[i] = "";
         }
+    }
+    const isFull = () => {
+
     }
     return {
         getBoard,
@@ -29,3 +34,7 @@ const Player = function (name, mark) {
         mark,
     }
 }
+
+const Game = (function () {
+
+})();
