@@ -65,7 +65,6 @@ Game = (function () {
         winner = null;
 
         Gameboard.resetBoard();
-        DisplayController.updateStatus();
         
         playerOne = new Player(playerOneName, "x");
         playerTwo = new Player(playerTwoName, "o");
@@ -160,7 +159,7 @@ DisplayController = (function() {
                 status.textContent = `It's a tie!`;
             } 
         } else {
-            status.textContent = `${Game.getCurrentPlayer().name}'s turn`
+            status.textContent = `${Game.getCurrentPlayer().name}'s turn`;
         }
     }
 

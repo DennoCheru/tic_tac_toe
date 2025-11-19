@@ -1,54 +1,118 @@
-/* 1. Use a more-intuitive box-sizing model */
+:root {
+    --cell-size: 100px;
+    --mark-size: calc(var(--cell-size) * 0.9);
+}
+
+
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
-/* 2. Remove default margin */
-* {
-  margin: 0;
-}
-
-/* 3. Enable keyword animations */
-@media (prefers-reduced-motion: no-preference) {
-  html {
-    interpolate-size: allow-keywords;
-  }
-}
-
 body {
-  /* 4. Add accessible line-height */
-  line-height: 1.5;
-  /* 5. Improve text rendering */
-  -webkit-font-smoothing: antialiased;
+    margin: 0;
+}
+.board {
+    width: 100vw;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    justify-content: center;
+    align-content: center;
+    align-items: center;
 }
 
-/* 6. Improve media defaults */
-img, picture, video, canvas, svg {
-  display: block;
-  max-width: 100%;
+.cell {
+    background: transparent;
+    margin: 0;
+    padding: 0;
+    border: 2px solid black;
+    width: var(--cell-size);
+    height: var(--cell-size);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
 }
 
-/* 7. Inherit fonts for form controls */
-input, button, textarea, select {
-  font: inherit;
+.cell:first-child,
+.cell:nth-child(2),
+.cell:nth-child(3) {
+    border-top: none;
 }
 
-/* 8. Avoid text overflows */
-p, h1, h2, h3, h4, h5, h6 {
-  overflow-wrap: break-word;
+.cell:nth-child(3n + 3) {
+    border-right: none;
 }
 
-/* 9. Improve line wrapping */
-p {
-  text-wrap: pretty;
-}
-h1, h2, h3, h4, h5, h6 {
-  text-wrap: balance;
+.cell:nth-child(7),
+.cell:nth-child(8),
+.cell:last-child {
+    border-bottom: none;
 }
 
-/*
-  10. Create a root stacking context
-*/
-#root, #__next {
-  isolation: isolate;
+.cell:nth-child(3n + 1) {
+    border-left: none;
 }
+
+.cell.player-x,
+.cell.player-o {
+    cursor: not-allowed;
+}
+
+.board.x .cell:not(.player-x):not(.player-o):hover::before,
+.board.x .cell:not(.player-x):not(.player-o):hover::after,
+.board.o .cell:not(.player-x):not(.player-o):hover::before,
+.board.o .cell:not(.player-x):not(.player-o):hover::after {
+    background-color: lightgray;
+}
+
+.cell.player-x::before,
+.cell.player-x::after,
+.cell.player-o::before,
+.cell.player-o::after {
+    background-color: black;
+}
+
+.cell.player-x::before,
+.cell.player-x::after,
+.board.x .cell:not(.player-x):not(.player-o):hover::before,
+.board.x .cell:not(.player-x):not(.player-o):hover::after {
+    content: '';
+    width: calc(var(--mark-size) * 0.15);
+    height: var(--mark-size);
+    position: absolute;
+}
+
+.cell.player-x::before,
+.board.x .cell:hover::before {
+    transform: rotate(45deg);
+}
+
+.cell.player-x::after,
+.board.x .cell:hover::after {
+    transform: rotate(-45deg);
+}
+
+.cell.player-o::before,
+.cell.player-o::after,
+.board.o .cell:not(.player-x):not(.player-o):hover::before,
+.board.o .cell:not(.player-x):not(.player-o):hover::after {
+    content: '';
+    position:absolute;
+    border-radius: 50%;
+}
+
+.cell.player-o::before,
+.board.o .cell:not(.player-x):not(.player-o):hover::before {    
+    width: var(--mark-size);
+    height: var(--mark-size);
+}
+
+.cell.player-o::after,
+.board.o .cell:not(.player-x):not(.player-o):hover::after {
+    width: calc(var(--mark-size) * 0.7);
+    height: calc(var(--mark-size) * 0.7);
+    background-color: white;
+}
+
