@@ -86,7 +86,11 @@ const Game = (function () {
         }
 
         switchPlayer();
-        return true;
+        return {
+            valid: true/false,
+            winner: 'X'/'O'/null,
+            tie: true/false,
+        }
     }
 
     const checkWinner = function(board) {
@@ -105,3 +109,4 @@ const Game = (function () {
         playRound,
     }
 })();
+
