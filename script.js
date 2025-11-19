@@ -1,4 +1,4 @@
-const Gameboard = (function() {
+Gameboard = (function() {
     board = Array(9).fill("");
 
     const getBoard = () => [...board];
@@ -44,8 +44,8 @@ const Player = function (name, mark) {
     }
 }
 
-const Game = (function () {
-    let playerOne, playerTwo, currentPlayer, gameOver;
+Game = (function () {
+    let playerOne, playerTwo, currentPlayer, gameOver, winner = null;
     const winPatterns = [
         [0, 1, 2],
         [3, 4, 5],
@@ -58,15 +58,22 @@ const Game = (function () {
     ]
 
     const startGame = function() {
-        Gameboard.resetBoard();
-        gameOver = false;
+        const playerOneName = document.querySelector('#player-one-name').value || "Player One";
+        const playerTwoName = document.querySelector('#player-two-name').value || "Player Two";
         
-        playerOne = new Player("Player One", "x");
-        playerTwo = new Player("Player Two", "o");
+        gameOver = false;
+        winner = null;
+
+        Gameboard.resetBoard();
+        DisplayController.updateStatus();
+        
+        playerOne = new Player(playerOneName, "x");
+        playerTwo = new Player(playerTwoName, "o");
         currentPlayer = playerOne;
     }
 
     const playRound = function(index) {
+
         if (gameOver || Gameboard.setMove(currentPlayer.mark, index) === false) {
             return;
         }
@@ -75,21 +82,20 @@ const Game = (function () {
         const board = Gameboard.getBoard();
         if (checkWinner(board)) {
             gameOver = true;
-            console.log(`${currentPlayer.name} wins!`)
-            return true;
+            winner = currentPlayer;
+            return {valid: true, winner: currentPlayer, tie: false};
         }
         
         if (Gameboard.isFull()) {
             gameOver = true;
-            console.log(`It's a tie!`)
-            return true;
+            return {valid: true, winner: null, tie:true};
         }
 
         switchPlayer();
         return {
-            valid: true/false,
-            winner: 'X'/'O'/null,
-            tie: true/false,
+            valid: true,
+            winner: winner,
+            tie: Gameboard.isFull() && !winner,
         }
     }
 
@@ -103,10 +109,69 @@ const Game = (function () {
     const switchPlayer = function () {
         currentPlayer = currentPlayer === playerOne ? playerTwo : playerOne;
     }
-
+    
+    const getCurrentPlayer = () => currentPlayer;
+    const isGameOver = () => gameOver;
+    const getWinner = () => winner;
     return {
         startGame,
         playRound,
+        getCurrentPlayer,
+        isGameOver,
+        getWinner,
     }
 })();
 
+DisplayController = (function() {
+    const cells = document.querySelectorAll('.cell');
+    const status = document.querySelector('.status')
+
+    const renderBoard = function() {
+        const board = Gameboard.getBoard();
+
+        cells.forEach((cell, index) => {
+            cell.textContent = board[index];
+            if(board[index] === "x") {
+                cell.classList.add('player-x');
+            } else if (board[index] === "o") {
+                cell.classList.add('player-o')
+            } else {
+                cell.classList.remove('player-x');
+                cell.classList.remove('player-o')
+            }
+        })
+    }
+
+    const clickCell = function() {
+        cells.forEach((cell, index) => {
+            cell.addEventListener("click", () => {
+                Game.playRound(index);
+                renderBoard();
+                updateStatus();
+            });
+        });
+    }
+
+    const updateStatus = function() {
+        if (Game.isGameOver()) {
+            if(Game.getWinner()) {
+                status.textContent = `${Game.getCurrentPlayer().name} wins!`;
+            } else if (Gameboard.isFull()) {
+                status.textContent = `It's a tie!`;
+            } 
+        } else {
+            status.textContent = `${Game.getCurrentPlayer().name}'s turn`
+        }
+    }
+
+    return {
+        renderBoard,
+        clickCell,
+        updateStatus,
+    }
+})();
+
+Game.startGame();
+DisplayController.renderBoard();
+DisplayController.updateStatus();
+DisplayController.clickCell();
