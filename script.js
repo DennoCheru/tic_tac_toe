@@ -128,6 +128,7 @@ DisplayController = (function() {
     const winningText = document.querySelector('.winning-message-text');
     const restartBtn = document.querySelector('#restartBtn');
     const startBtn = document.querySelector('#start-button')
+    const gameBoard = document.querySelector('#board')
 
     const renderBoard = function() {
         const board = Gameboard.getBoard();
@@ -143,6 +144,14 @@ DisplayController = (function() {
                 cell.classList.remove('player-o')
             }
         })
+
+        gameBoard.classList.remove('x');
+        gameBoard.classList.remove('o');
+        if (Game.getCurrentPlayer().mark === 'x') {
+            gameBoard.classList.add('x');
+        } else {
+            gameBoard.classList.add('o');
+        }
     }
 
     const clickCell = function() {
