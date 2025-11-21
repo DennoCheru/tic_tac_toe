@@ -12,7 +12,8 @@
         <input type="text" placeholder="Player 1" id="player-one-name">
         <input type="text" placeholder="Player 2" id="player-two-name">
         <button id="start-button">Start Game</button>
-    </div>
+    </div>    
+    <div class="status"></div>
     <div class="board" id="board">
         <button class="cell"></button>
         <button class="cell"></button>
@@ -24,10 +25,11 @@
         <button class="cell"></button>
         <button class="cell"></button>
     </div>
-    <div class="status"></div>
-    <dialog class="winning-message">
-        <div class="winning-message-text"></div>
-        <button id="restartBtn">Restart</button>
+    <dialog class="winning-message" closedby="any">
+        <div class="dialog-content">
+            <div class="winning-message-text"></div>
+            <button id="restartBtn">Restart</button>
+        </div>
     </dialog>
 </body>
 </html>

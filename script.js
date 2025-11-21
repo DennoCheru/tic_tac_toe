@@ -123,7 +123,11 @@ Game = (function () {
 
 DisplayController = (function() {
     const cells = document.querySelectorAll('.cell');
-    const status = document.querySelector('.status')
+    const status = document.querySelector('.status');
+    const dialog = document.querySelector('.winning-message');
+    const winningText = document.querySelector('.winning-message-text');
+    const restartBtn = document.querySelector('#restartBtn');
+    const startBtn = document.querySelector('#start-button')
 
     const renderBoard = function() {
         const board = Gameboard.getBoard();
@@ -154,14 +158,29 @@ DisplayController = (function() {
     const updateStatus = function() {
         if (Game.isGameOver()) {
             if(Game.getWinner()) {
-                status.textContent = `${Game.getCurrentPlayer().name} wins!`;
+                dialog.showModal();
+                winningText.textContent = `${Game.getWinner().name} wins!`;
             } else if (Gameboard.isFull()) {
-                status.textContent = `It's a tie!`;
+                dialog.showModal();
+                winningText.textContent = `It's a tie!`;
             } 
         } else {
             status.textContent = `${Game.getCurrentPlayer().name}'s turn`;
         }
     }
+    
+    startBtn.addEventListener("click", () => {
+        Game.startGame();
+        updateStatus();
+        renderBoard();
+    })
+
+    restartBtn.addEventListener("click", () => {
+        dialog.close();
+        Game.startGame();
+        updateStatus();
+        renderBoard();
+    });
 
     return {
         renderBoard,
